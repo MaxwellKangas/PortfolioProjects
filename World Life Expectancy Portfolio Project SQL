@@ -4,6 +4,8 @@ SELECT *
 FROM world_life_expectancy
 ;
 
+
+
 SELECT Country, Year, CONCAT(Country, Year), COUNT(CONCAT(Country, Year))
 FROM world_life_expectancy
 GROUP BY Country, Year, CONCAT(Country, Year)
