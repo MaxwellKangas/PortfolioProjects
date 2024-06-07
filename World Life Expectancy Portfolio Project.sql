@@ -2,7 +2,7 @@
 
 World Life Expectancy Project (Data Cleaning)
 
-/*
+*/
 
 SELECT * 
 FROM world_life_expectancy
@@ -44,7 +44,7 @@ WHERE Row_Num > 1
 
 --------------------------------------------------------------------------------------------------------------------------
 
-
+-- Filling in Missing Status Data
 
 SELECT * 
 FROM world_life_expectancy
@@ -58,18 +58,19 @@ WHERE Status <> ''
 
 SELECT DISTINCT(Country)
 FROM world_life_expectancy
-WHERE Status = 'Developing';
+WHERE Status = 'Developing'
+;
 
 UPDATE world_life_expectancy
 SET Status = 'Developing'
 WHERE Country IN (SELECT DISTINCT(Country)
-				  FROM world_life_expectancy
-				  WHERE Status = 'Developing');
-                  
+		  FROM world_life_expectancy
+		  WHERE Status = 'Developing')
+;
                   
 UPDATE world_life_expectancy t1  
 JOIN world_life_expectancy t2
-	ON t1.Country = t2.Country
+    ON t1.Country = t2.Country
 SET t1.Status = 'Developing'
 WHERE t1.Status = ''
 AND t2.Status <> ''
@@ -90,14 +91,18 @@ AND t2.Status <> ''
 AND t2.Status = 'Developed'
 ;
 
+--------------------------------------------------------------------------------------------------------------------------
+
+-- Filling in Missing Life Expectancy Data
+
 SELECT * 
 FROM world_life_expectancy
-#WHERE `Life expectancy` = ''
+WHERE `Life expectancy` = ''
 ;    
 
 SELECT Country, Year, `Life expectancy`  
 FROM world_life_expectancy
-#WHERE `Life expectancy` = ''
+WHERE `Life expectancy` = ''
 ;    
 
 SELECT t1.Country, t1.Year, t1.`Life expectancy`, 
@@ -106,20 +111,20 @@ t3.Country, t3.Year, t3.`Life expectancy`,
 ROUND((t2.`Life expectancy` + t3.`Life expectancy`)/2,1)
 FROM world_life_expectancy t1
 JOIN world_life_expectancy t2
-	ON t1.Country = t2.Country
+    ON t1.Country = t2.Country
     AND t1.Year = t2.Year - 1
 JOIN world_life_expectancy t3
-	ON t1.Country = t3.Country
+    ON t1.Country = t3.Country
     AND t1.Year = t3.Year + 1
 WHERE t1.`Life expectancy` = '' 
 ; 
 
 UPDATE world_life_expectancy t1
 JOIN world_life_expectancy t2
-	ON t1.Country = t2.Country
+    ON t1.Country = t2.Country
     AND t1.Year = t2.Year - 1
 JOIN world_life_expectancy t3
-	ON t1.Country = t3.Country
+    ON t1.Country = t3.Country
     AND t1.Year = t3.Year + 1      
 SET t1.`Life expectancy` = ROUND((t2.`Life expectancy` + t3.`Life expectancy`)/2,1) 
 WHERE t1.`Life expectancy` = ''
@@ -127,16 +132,24 @@ WHERE t1.`Life expectancy` = ''
 
 SELECT * 
 FROM world_life_expectancy
-#WHERE `Life expectancy` = ''
+WHERE `Life expectancy` = ''
 ;  
 
+--------------------------------------------------------------------------------------------------------------------------
 
+/*
 
-# World Life Expectancy Project (Exploratory Data Analysis)
+World Life Expectancy Project (Exploratory Data Analysis)
+
+*/
 
 SELECT *
 FROM world_life_expectancy
 ;
+
+--------------------------------------------------------------------------------------------------------------------------
+
+-- Looking at increase in life expectancy over time by country
 
 SELECT Country, 
 MIN(`Life expectancy`), 
@@ -149,12 +162,21 @@ AND MAX(`Life expectancy`) <> 0
 ORDER BY Life_Increase_15_Years ASC
 ;
 
+--------------------------------------------------------------------------------------------------------------------------
+
+-- Looking at average life expectancy by year
+
 SELECT Year, ROUND(AVG(`Life expectancy`),2)
 FROM world_life_expectancy
 WHERE `Life expectancy` <> 0
 GROUP BY Year
 ORDER BY Year
 ;
+
+--------------------------------------------------------------------------------------------------------------------------
+
+-- Looking at correlation between life expectancy and GDP
+
 
 SELECT *
 FROM world_life_expectancy
@@ -176,6 +198,10 @@ AVG(CASE WHEN GDP <= 1500 THEN `Life expectancy` ELSE NULL END) Low_GDP_Life_Exp
 FROM world_life_expectancy
 ;
 
+--------------------------------------------------------------------------------------------------------------------------
+
+-- Looking at correlation between life expectancy and status of countries (developing vs developed)
+
 SELECT *
 FROM world_life_expectancy
 ;
@@ -190,6 +216,10 @@ FROM world_life_expectancy
 GROUP BY Status
 ;
 
+--------------------------------------------------------------------------------------------------------------------------
+
+-- Looking at correlation between life expectancy and BMI
+
 SELECT Country, ROUND(AVG(`Life expectancy`),1) AS Life_Exp, ROUND(AVG(BMI),1) AS BMI
 FROM world_life_expectancy
 GROUP BY Country
@@ -197,6 +227,10 @@ HAVING Life_Exp > 0
 AND BMI > 0
 ORDER BY BMI ASC
 ;
+
+--------------------------------------------------------------------------------------------------------------------------
+
+-- Looking at adult mortality rates
 
 SELECT Country,
 Year,
