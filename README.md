@@ -1,1 +1,1 @@
-This Repository is where I will be storing all of the codes and queries for my Data Analyst Portfolio
+This Repository is where I will be storing all of the codes, queries, and raw data for my Data Analyst Portfolio
