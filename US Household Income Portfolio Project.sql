@@ -1,18 +1,32 @@
-# US Household Income Data Cleaning
+/*
+
+US Household Income Data Cleaning
+
+*/
 
 SELECT * 
 FROM us_project.us_household_income;
 
 SELECT * 
 FROM us_project.us_household_income_statistics;
+
+--------------------------------------------------------------------------------------------------------------------------
+
+-- Fixing column name
 
 ALTER TABLE us_project.us_household_income_statistics RENAME COLUMN `ï»¿id` TO `id`;
 
-SELECT COUNT(id) 
-FROM us_project.us_household_income;
+--------------------------------------------------------------------------------------------------------------------------
+
+-- Removing duplicates
 
 SELECT COUNT(id) 
-FROM us_project.us_household_income_statistics;
+FROM us_project.us_household_income
+;
+
+SELECT COUNT(id) 
+FROM us_project.us_household_income_statistics
+;
 
 SELECT id, COUNT(id)
 FROM us_project.us_household_income
@@ -30,8 +44,6 @@ FROM us_project.us_household_income
 WHERE row_num > 1
 ;
 
-
-
 DELETE FROM us_household_income
 WHERE row_id IN (
 	SELECT row_id
@@ -44,21 +56,24 @@ WHERE row_id IN (
 	WHERE row_num > 1)
 ;
 
+--------------------------------------------------------------------------------------------------------------------------
+
+-- Standardizing data
 
 SELECT DISTINCT State_Name
 FROM us_project.us_household_income
 ORDER BY 1
 ;
 
-
 UPDATE us_project.us_household_income
 SET State_Name = 'Georgia'
-WHERE State_Name = 'georia';
+WHERE State_Name = 'georia'
+;
 
 UPDATE us_project.us_household_income
 SET State_Name = 'Alabama'
-WHERE State_Name = 'alabama';
-
+WHERE State_Name = 'alabama'
+;
 
 SELECT *
 FROM us_project.us_household_income
@@ -69,14 +84,13 @@ ORDER BY 1
 UPDATE us_household_income
 SET Place = 'Autaugaville'
 WHERE County = 'Autauga County'
-AND City = 'Vinemont' ;
-
-
+AND City = 'Vinemont' 
+;
 
 SELECT Type, COUNT(Type) 
 FROM us_project.us_household_income
 GROUP BY Type
-#ORDER BY 1
+ORDER BY 1
 ;
 
 UPDATE us_household_income
@@ -89,15 +103,18 @@ FROM us_project.us_household_income
 WHERE (ALand = 0 OR ALand = '' OR ALand IS NULL)
 ;
 
+/*
 
-# US Household Income Exploratory Data Analysis
+US Household Income Exploratory Data Analysis
 
+*/
 
 SELECT * 
 FROM us_project.us_household_income;
 
 SELECT * 
 FROM us_project.us_household_income_statistics;
+
 
 
 SELECT State_Name, SUM(ALand), SUM(AWater)
