@@ -103,6 +103,8 @@ FROM us_project.us_household_income
 WHERE (ALand = 0 OR ALand = '' OR ALand IS NULL)
 ;
 
+--------------------------------------------------------------------------------------------------------------------------
+
 /*
 
 US Household Income Exploratory Data Analysis
@@ -115,39 +117,51 @@ FROM us_project.us_household_income;
 SELECT * 
 FROM us_project.us_household_income_statistics;
 
+------------------------------------------------------------------------------------------------------------------------
 
+-- Looking at total land and water area by state 
 
 SELECT State_Name, SUM(ALand), SUM(AWater)
 FROM us_project.us_household_income
 GROUP BY State_Name
 ORDER BY 2 DESC
-LIMIT 10;
+LIMIT 10
+;
 
 SELECT State_Name, SUM(ALand), SUM(AWater)
 FROM us_project.us_household_income
 GROUP BY State_Name
 ORDER BY 3 DESC
-LIMIT 10;
+LIMIT 10
+;
 
+--------------------------------------------------------------------------------------------------------------------------
+
+-- Joining the income and income statistics tables
 
 SELECT * 
 FROM us_project.us_household_income u
 JOIN us_project.us_household_income_statistics us
-	ON u.id = us.id;
-
+	ON u.id = us.id
+;
 
 SELECT * 
 FROM us_project.us_household_income u
 INNER JOIN us_project.us_household_income_statistics us
 	ON u.id = us.id
-WHERE Mean <> 0;
+WHERE Mean <> 0
+;
 
+--------------------------------------------------------------------------------------------------------------------------
+
+-- Looking at mean and median incomes by state, type of area, and city
  
 SELECT u.State_Name, County, Type, `Primary`, Mean, Median
 FROM us_project.us_household_income u
 INNER JOIN us_project.us_household_income_statistics us
 	ON u.id = us.id
-WHERE Mean <> 0;
+WHERE Mean <> 0
+;
 
 SELECT u.State_Name, ROUND(AVG(Mean),1), ROUND(AVG(Median),1)
 FROM us_project.us_household_income u
@@ -158,8 +172,6 @@ GROUP BY u.State_Name
 ORDER BY 3 DESC
 LIMIT 10
 ;
-
-
 
 SELECT Type, COUNT(Type), ROUND(AVG(Mean),1), ROUND(AVG(Median),1)
 FROM us_project.us_household_income u
@@ -174,14 +186,15 @@ LIMIT 20
 
 SELECT *
 FROM us_household_income
-WHERE Type = 'Community';
-
+WHERE Type = 'Community'
+;
 
 SELECT u.State_Name, City, ROUND(AVG(Mean),1), ROUND(AVG(Median),1) 
 FROM us_project.us_household_income u
 JOIN us_project.us_household_income_statistics us
 	ON u.id = us.id
 GROUP BY u.State_Name, City
-ORDER BY ROUND(AVG(Mean),1) DESC;
+ORDER BY ROUND(AVG(Mean),1) DESC
+;
     
     
